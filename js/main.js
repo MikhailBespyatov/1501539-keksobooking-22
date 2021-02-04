@@ -8,13 +8,13 @@ const getRandomNumber = (min = 0, max = 1) => {
   }
 }
 
-const getRandomFractionalNumber = (min = 0, max = 1, numbers_after_point) => {
+const getRandomFractionalNumber = (min = 0, max = 1, numbersAfterPoint) => {
   if (min >= 0 && max >= 0) {
     if (min >= max) {
-      return parseFloat((Math.random() * (min - max) + max).toFixed(numbers_after_point));
+      return parseFloat((Math.random() * (min - max) + max).toFixed(numbersAfterPoint));
     }
 
-    return parseFloat((Math.random() * (max - min) + min).toFixed(numbers_after_point));
+    return parseFloat((Math.random() * (max - min) + min).toFixed(numbersAfterPoint));
   }
 };
 

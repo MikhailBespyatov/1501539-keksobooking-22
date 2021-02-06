@@ -38,27 +38,36 @@ const uniqueOfferFeatures = unique(randomOfferFeatures);
 const randomOfferPhotos =
 new Array(getRandomNumber(1, 10)).fill(null).map(() => getRandomOfferItem(offerPhotos));
 
-const author = {
-  avatar: `img/avatars/user0${getRandomNumber(0, 8)}.png`,
+const createAd = () => {
+  return {
+    author: {
+      avatar: `img/avatars/user0${getRandomNumber(1, 8)}.png`,
+    },
+
+    offer: {
+      title: 'Заголовок объявления',
+      address: `${getRandomFractionalNumber(0, 100, 2)}, ${getRandomFractionalNumber(0, 100, 2)}`,
+      price: `${getRandomNumber(100, 10000)}`,
+      type: 'palace',
+      rooms: `${getRandomNumber(1, 5)}`,
+      guests: `${getRandomNumber(2, 10)}`,
+      checkin: '14:00',
+      checkout: '12:00',
+      features: uniqueOfferFeatures,
+      description: 'Очень уютный номер с видом на перламутровый залив',
+      photos: randomOfferPhotos,
+      location: {
+        x: getRandomFractionalNumber(35.65000, 35.70000, 5),
+        y: getRandomFractionalNumber(139.70000, 139.80000, 5),
+      },
+    },
+  }
+}
+
+const NUMBERS_ADS_ARRAY = 10;
+
+const createAds = () => {
+  return new Array(NUMBERS_ADS_ARRAY).fill(null).map(() => createAd());
 };
 
-const offer = {
-  title: 'Заголовок объявления',
-  address: `${getRandomFractionalNumber(0, 100, 2)}, ${getRandomFractionalNumber(0, 100, 2)}`,
-  price: `${getRandomNumber(100, 10000)}`,
-  type: 'palace',
-  rooms: `${getRandomNumber(1, 5)}`,
-  guests: `${getRandomNumber(2, 10)}`,
-  checkin: '14:00',
-  checkout: '12:00',
-  features: uniqueOfferFeatures,
-  description: 'Очень уютный номер с видом на перламутровый залив',
-  photos: randomOfferPhotos,
-  location: {
-    x: getRandomFractionalNumber(35.65000, 35.70000, 5),
-    y: getRandomFractionalNumber(139.70000, 139.80000, 5),
-  },
-};
-
-alert(author);
-alert(offer);
+createAds();

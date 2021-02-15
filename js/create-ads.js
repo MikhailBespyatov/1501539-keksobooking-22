@@ -42,4 +42,4 @@ const createAds = (number) => new Array(number).fill(null).map(() => createAd())
 
 createAds(NUMBERS_ADS_ARRAY);
 
-export {createAd};
+export {createAd, createAds};

@@ -11,7 +11,7 @@ const cardTemplate = document.querySelector('#card').content;
 const createCard = (obj) => {
 
   //контент шаблона
-  const cardPopup = cardTemplate.querySelector('.popup').cloneNode(true);
+  const cardPopup = cardTemplate.querySelector('.popup');
 
   //заголовок
   const cardTitle = cardTemplate.querySelector('.popup__title');
@@ -94,7 +94,5 @@ const createCard = (obj) => {
 
   return cardPopup;
 };
-
-ads.map((ad) => createCard(ad));
 
 cardsContainer.appendChild(createCard(ads[0]));

@@ -1,2 +1,2 @@
 import './create-ads.js';
-import './create-element.js';
+import './create-card.js';

@@ -1,23 +1,23 @@
 const formInfo = document.querySelector('.ad-form');
 const formInfoFieldsets = formInfo.querySelectorAll('fieldset');
-const formFiltres = document.querySelector('.map__filters');
-const formFiltresFieldset = formFiltres.querySelector('#housing-features');
-const formFiltresSelects = formFiltres.querySelectorAll('select');
+const formFilters = document.querySelector('.map__filters');
+const formFiltersFieldset = formFilters.querySelector('#housing-features');
+const formFiltersSelects = formFilters.querySelectorAll('select');
 
 
 formInfo.classList.add('ad-form--disabled');
-formFiltres.classList.add('ad-form--disabled');
+formFilters.classList.add('map__filters--disabled');
 formInfoFieldsets.forEach((element) => element.setAttribute('disabled', 'disabled'));
-formFiltresFieldset.setAttribute('disabled', 'disabled');
-formFiltresSelects.forEach((element) => element.setAttribute('disabled', 'disabled'));
+formFiltersFieldset.setAttribute('disabled', 'disabled');
+formFiltersSelects.forEach((element) => element.setAttribute('disabled', 'disabled'));
 
 
-const getActiveState = () => {
+const setActiveState = () => {
   formInfo.classList.remove('ad-form--disabled');
-  formFiltres.classList.remove('ad-form--disabled');
-  formInfoFieldsets.forEach((element) => element.removeAttribute('disabled', 'disabled'));
-  formFiltresFieldset.removeAttribute('disabled', 'disabled');
-  formFiltresSelects.forEach((element) => element.removeAttribute('disabled', 'disabled'));
+  formFilters.classList.remove('map__filters--disabled');
+  formInfoFieldsets.forEach((element) => element.removeAttribute('disabled'));
+  formFiltersFieldset.removeAttribute('disabled');
+  formFiltersSelects.forEach((element) => element.removeAttribute('disabled'));
 };
 
-export { getActiveState };
+export { setActiveState };

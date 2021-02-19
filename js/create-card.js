@@ -1,5 +1,3 @@
-import {createAds, NUMBERS_ADS_ARRAY} from './create-ads.js';
-
 const HOUSE_TYPE = {
   flat: 'Квартира',
   bungalow: 'Бунгало',
@@ -8,7 +6,6 @@ const HOUSE_TYPE = {
 };
 const GUEST_TEXT_FORMS = ['гостя', 'гостей'];
 const ROOM_TEXT_FORMS = ['комната', 'комнаты', 'комнат'];
-const ads = createAds(NUMBERS_ADS_ARRAY);
 const cardTemplate = document.querySelector('#card').content;
 
 const renderCardFeatures = (array, block) => {
@@ -46,7 +43,7 @@ const declOfNumRoom = (n, textForms) => {
   if (n1 > 1 && n1 < 5) {
     return textForms[1];
   }
-  if (n1 == 1) {
+  if (n1 === 1) {
     return textForms[0];
   }
   return textForms[2];
@@ -55,7 +52,7 @@ const declOfNumRoom = (n, textForms) => {
 const declOfNumGuest = (n, textForms) => {
   n = Math.abs(n) % 100;
   const n1 = n % 10;
-  if (n1 == 1) {
+  if (n1 === 1) {
     return textForms[0];
   }
   return textForms[1];
@@ -89,7 +86,5 @@ const createCard = (object) => {
 
   return cardPopup;
 };
-
-ads.map((ad) => createCard(ad));
 
 export {createCard};

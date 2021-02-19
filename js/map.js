@@ -1,18 +1,21 @@
+/* global L:readonly */
+
 import { createAds, NUMBERS_ADS_ARRAY } from './create-ads.js';
 import { createCard } from './create-card.js';
-import { getActiveState } from './active-state.js';
+import { setActiveState } from './active-state.js';
 
 const ads = createAds(NUMBERS_ADS_ARRAY);
 const address = document.querySelector('#address');
+const CENTER_COORDINATES = {
+  lat: 35.65500,
+  lng: 139.75000,
+};
 
 const map = L.map('map-canvas')
   .on('load', () => {
-    getActiveState();
+    setActiveState();
   })
-  .setView({
-    lat: 35.65500,
-    lng: 139.75000,
-  }, 12);
+  .setView(CENTER_COORDINATES, 12);
 
 L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -28,10 +31,7 @@ const mainPinIcon = L.icon({
 });
 
 const mainPinMarker = L.marker(
-  {
-    lat: map._lastCenter.lat,
-    lng: map._lastCenter.lng,
-  },
+  CENTER_COORDINATES,
   {
     draggable: true,
     icon: mainPinIcon,
@@ -43,12 +43,14 @@ mainPinMarker.addTo(map);
 map.on('click', (evt) => {
   mainPinMarker.setLatLng(evt.latlng);
   map.setView(evt.latlng);
+  address.value =
+    `${evt.latlng.lat.toFixed(5)}, ${evt.latlng.lng.toFixed(5)}`;
 });
 
 mainPinMarker.on('moveend', (evt) => {
-  const coordinates = evt.target.getLatLng();
-  map.setView(coordinates);
-  address.value = `${coordinates.lat.toFixed(5)}, ${coordinates.lng.toFixed(5)}`;
+  map.setView(evt.target.getLatLng());
+  address.value =
+    `${evt.target.getLatLng().lat.toFixed(5)}, ${evt.target.getLatLng().lng.toFixed(5)}`;
 });
 
 const createMarker = (array) => {
@@ -83,5 +85,5 @@ for (let i = 0; i < ads.length; i++) {
 
 address.setAttribute('readonly', 'readonly');
 address.value =
-  `${mainPinMarker._latlng.lat.toFixed(5)}, ${mainPinMarker._latlng.lng.toFixed(5)}`;
+  `${CENTER_COORDINATES.lat.toFixed(5)}, ${CENTER_COORDINATES.lng.toFixed(5)}`;
 

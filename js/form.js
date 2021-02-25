@@ -6,14 +6,17 @@ const MIN_PRICE = {
   'house': 5000,
   'palace': 10000,
 };
+
 const ONE_ROOMS_INDEX = 0;
 const TWO_ROOMS_INDEX = 1;
 const THREE_ROOMS_INDEX = 2;
 const HUNDRED_ROOMS_INDEX = 3;
-const THREE_GUESTS_INDEX = 0;
-const TWO_GUESTS_INDEX = 1;
-const ONE_GUESTS_INDEX = 2;
-const NO_GUESTS_INDEX = 3;
+const ROOMS_GUESTS = {
+  0: [2],
+  1: [1, 2],
+  2: [0, 1, 2],
+  3: [3],
+};
 
 const formTitle = document.querySelector('#title');
 const houseType = document.querySelector('#type');
@@ -55,16 +58,13 @@ const checkRoomsGuests = () => {
 
   switch (selectedRoom) {
     case ONE_ROOMS_INDEX:
-      return (selectedGuests === ONE_GUESTS_INDEX);
+      return ROOMS_GUESTS[ONE_ROOMS_INDEX].includes(selectedGuests);
     case TWO_ROOMS_INDEX:
-      return ((selectedGuests === ONE_GUESTS_INDEX)
-      || (selectedGuests === TWO_GUESTS_INDEX));
+      return ROOMS_GUESTS[TWO_ROOMS_INDEX].includes(selectedGuests);
     case THREE_ROOMS_INDEX:
-      return ((selectedGuests === ONE_GUESTS_INDEX)
-      || (selectedGuests === TWO_GUESTS_INDEX)
-      || (selectedGuests === THREE_GUESTS_INDEX));
+      return ROOMS_GUESTS[THREE_ROOMS_INDEX].includes(selectedGuests);
     case HUNDRED_ROOMS_INDEX:
-      return (selectedGuests === NO_GUESTS_INDEX);
+      return ROOMS_GUESTS[HUNDRED_ROOMS_INDEX].includes(selectedGuests);
     default:
       return false;
   }
@@ -73,11 +73,11 @@ const checkRoomsGuests = () => {
 rooms.addEventListener('change', () => {
   const isRoomsGuestsValid = checkRoomsGuests();
   if (!isRoomsGuestsValid) {
-    rooms.setCustomValidity('Некорректное значение! Проверьте количество комнат.');
+    guests.setCustomValidity('Некорректное значение! Проверьте количество гостей.');
   } else {
-    rooms.setCustomValidity('');
+    guests.setCustomValidity('');
   }
-  rooms.reportValidity();
+  guests.reportValidity();
 });
 
 guests.addEventListener('change', () => {

@@ -1,3 +1,5 @@
+const ALERT_SHOW_TIME = 3000;
+
 const getRandomNumber = (min = 0, max = 1) => {
   if (min >= 0 && max >= 0) {
     return (min >= max)
@@ -34,4 +36,43 @@ const shuffle = (array) => {
   return array;
 };
 
-export {getRandomNumber, getRandomFractionalNumber, getRandomItem, getRandomArray, shuffle};
+const showAlert = (message) => {
+  const alertConteiner = document.createElement('div');
+  alertConteiner.style.zIndex = 10;
+  alertConteiner.style.position = 'absolute';
+  alertConteiner.style.left = '20px';
+  alertConteiner.style.top = '20px';
+  alertConteiner.style.right = '20px';
+  alertConteiner.style.padding = 0;
+  alertConteiner.style.fontSize = '30px';
+  alertConteiner.style.textAlign = 'center';
+  alertConteiner.style.backgroundColor = 'green';
+  alertConteiner.style.color = 'white';
+  alertConteiner.textContent = message;
+
+  document.body.append(alertConteiner);
+
+  setTimeout(() => {
+    alertConteiner.remove();
+  }, ALERT_SHOW_TIME);
+};
+
+const closePopup = (popup, button) => {
+  window.addEventListener('click', () => {
+    popup.remove();
+  });
+
+  window.addEventListener('keydown', (evt) => {
+    if (evt.keyCode === 27) {
+      popup.remove();
+    }
+  });
+
+  if (button) {
+    button.addEventListener('click', () => {
+      popup.remove();
+    });
+  }
+};
+
+export {getRandomNumber, getRandomFractionalNumber, getRandomItem, getRandomArray, shuffle, showAlert, closePopup};

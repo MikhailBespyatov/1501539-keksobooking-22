@@ -1,3 +1,7 @@
+import { sendData, SERVER_URL } from './api.js';
+import { CENTER_COORDINATES, address, mainPinMarker } from './map.js';
+import { closePopup } from './util.js';
+
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
 const MIN_PRICE = {
@@ -6,11 +10,6 @@ const MIN_PRICE = {
   'house': 5000,
   'palace': 10000,
 };
-
-const ONE_ROOMS_INDEX = 0;
-const TWO_ROOMS_INDEX = 1;
-const THREE_ROOMS_INDEX = 2;
-const HUNDRED_ROOMS_INDEX = 3;
 const ROOMS_GUESTS = {
   0: [2],
   1: [1, 2],
@@ -18,6 +17,8 @@ const ROOMS_GUESTS = {
   3: [3],
 };
 
+const formAd = document.querySelector('.ad-form');
+const resetButton = document.querySelector('.ad-form__reset');
 const formTitle = document.querySelector('#title');
 const houseType = document.querySelector('#type');
 const pricePerNight = document.querySelector('#price');
@@ -25,6 +26,12 @@ const timeIn = document.querySelector('#timein');
 const timeOut = document.querySelector('#timeout');
 const rooms = document.querySelector('#room_number');
 const guests = document.querySelector('#capacity');
+const description = document.querySelector('#description');
+const successPopup = document.querySelector('#success').content;
+const successPopupContent = successPopup.querySelector('.success').cloneNode(true);
+const errorPopup = document.querySelector('#error').content;
+const errorPopupContent = errorPopup.querySelector('.error').cloneNode(true);
+const errorButton = errorPopupContent.querySelector('.error__button');
 
 formTitle.addEventListener('input', () => {
   const titleLength = formTitle.value.length;
@@ -52,23 +59,7 @@ timeOut.onchange = () => {
   timeIn.value = timeOut.value;
 };
 
-const checkRoomsGuests = () => {
-  const selectedRoom = rooms.selectedIndex;
-  const selectedGuests = guests.selectedIndex;
-
-  switch (selectedRoom) {
-    case ONE_ROOMS_INDEX:
-      return ROOMS_GUESTS[ONE_ROOMS_INDEX].includes(selectedGuests);
-    case TWO_ROOMS_INDEX:
-      return ROOMS_GUESTS[TWO_ROOMS_INDEX].includes(selectedGuests);
-    case THREE_ROOMS_INDEX:
-      return ROOMS_GUESTS[THREE_ROOMS_INDEX].includes(selectedGuests);
-    case HUNDRED_ROOMS_INDEX:
-      return ROOMS_GUESTS[HUNDRED_ROOMS_INDEX].includes(selectedGuests);
-    default:
-      return false;
-  }
-};
+const checkRoomsGuests = () => ROOMS_GUESTS[rooms.selectedIndex].includes(guests.selectedIndex);
 
 rooms.addEventListener('change', () => {
   const isRoomsGuestsValid = checkRoomsGuests();
@@ -90,3 +81,35 @@ guests.addEventListener('change', () => {
   guests.reportValidity();
 });
 
+const resetForm = () => {
+  formTitle.value = '';
+  houseType.value = 'flat';
+  timeIn.value = '12:00';
+  timeOut.value = '12:00';
+  address.value =
+  `${CENTER_COORDINATES.lat.toFixed(5)}, ${CENTER_COORDINATES.lng.toFixed(5)}`;
+  rooms.value = '1';
+  guests.value = '1';
+  description.value = '';
+  pricePerNight.value = '';
+  pricePerNight.placeholder = `${MIN_PRICE['flat']}`;
+  mainPinMarker.setLatLng(CENTER_COORDINATES);
+  document.body.append(successPopupContent);
+};
+
+resetButton.addEventListener('click', resetForm);
+
+const getErr = () => {
+  document.body.append(errorPopupContent);
+};
+
+const setFormSubmit = (onSuccess) => {
+  formAd.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    sendData(() => onSuccess(), getErr, SERVER_URL, new FormData(evt.target))
+  });
+};
+
+closePopup(errorPopupContent, errorButton);
+closePopup(successPopupContent);
+setFormSubmit(resetForm);

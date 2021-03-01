@@ -88,7 +88,7 @@ const resetForm = () => {
   timeIn.value = '12:00';
   timeOut.value = '12:00';
   address.value =
-  `${CENTER_COORDINATES.lat.toFixed(5)}, ${CENTER_COORDINATES.lng.toFixed(5)}`;
+    `${CENTER_COORDINATES.lat.toFixed(5)}, ${CENTER_COORDINATES.lng.toFixed(5)}`;
   rooms.value = '1';
   guests.value = '1';
   description.value = '';
@@ -101,7 +101,7 @@ const resetForm = () => {
 resetButton.addEventListener('click', () => {
   setTimeout(() => {
     address.value =
-  `${CENTER_COORDINATES.lat.toFixed(5)}, ${CENTER_COORDINATES.lng.toFixed(5)}`;
+      `${CENTER_COORDINATES.lat.toFixed(5)}, ${CENTER_COORDINATES.lng.toFixed(5)}`;
   }, ADDRESS_TIME);
   pricePerNight.placeholder = `${MIN_PRICE['flat']}`;
   mainPinMarker.setLatLng(CENTER_COORDINATES);
@@ -112,10 +112,10 @@ const getErr = () => {
   document.body.append(errorPopupContent);
 };
 
-  formAd.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-    sendData(resetForm, getErr, SERVER_URL, new FormData(evt.target))
-  });
+formAd.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  sendData(resetForm, getErr, SERVER_URL, new FormData(evt.target))
+});
 
 closePopup(errorPopupContent, errorButton);
 closePopup(successPopupContent);

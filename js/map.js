@@ -4,17 +4,28 @@ import { createCard } from './create-card.js';
 import { setActiveState } from './active-state.js';
 import { getData, DATA_URL } from './api.js';
 import { showAlert } from './util.js';
+import { checkHouseType, checkPrice, checkRooms, changeElement, checkGuests, checkFeatures } from './filter.js';
 
 const address = document.querySelector('#address');
 const CENTER_COORDINATES = {
   lat: 35.65500,
   lng: 139.75000,
 };
+const layerGroup = L.layerGroup();
 
-const createMarkers = (card) => {
-  for (let i = 0; i < card.length; i++) {
-    createMarker(card[i])
-  }
+const createMarkers = (cards) => {
+  cards
+    .slice()
+    .filter((el) => checkHouseType(el))
+    .filter((el) => checkPrice(el))
+    .filter((el) => checkRooms(el))
+    .filter((el) => checkGuests(el))
+    .filter((el) => checkFeatures(el))
+    .slice(0, 10)
+    .forEach((el) => {
+      createMarker(el);
+    });
+
 };
 
 const getError = () => {
@@ -28,7 +39,7 @@ const createMarker = (array) => {
     iconAnchor: [15, 30],
   });
 
-  const marker = L.marker(
+  const marker = new L.marker(
     {
       lat: array.location.lat,
       lng: array.location.lng,
@@ -39,18 +50,30 @@ const createMarker = (array) => {
   );
 
   marker
-    .addTo(map)
+    .addTo(layerGroup)
     .bindPopup(
       createCard(array),
       {
         keepInView: true,
       });
+
+  layerGroup.addTo(map);
 };
 
 const map = L.map('map-canvas')
   .on('load', () => {
     setActiveState();
-    getData(DATA_URL, createMarkers, getError);
+    getData(
+      DATA_URL,
+      (cards) => {
+        createMarkers(cards);
+        changeElement(() => {
+          layerGroup.clearLayers();
+          createMarkers(cards);
+        });
+      },
+      getError,
+    );
   })
   .setView(CENTER_COORDINATES, 10);
 
@@ -93,5 +116,6 @@ mainPinMarker.on('moveend', (evt) => {
 address.setAttribute('readonly', 'readonly');
 address.value =
   `${CENTER_COORDINATES.lat.toFixed(5)}, ${CENTER_COORDINATES.lng.toFixed(5)}`;
+
 
 export { CENTER_COORDINATES, address, getError, mainPinMarker }

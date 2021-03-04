@@ -1,22 +1,22 @@
 const DATA_URL = 'https://22.javascript.pages.academy/keksobooking/data';
 const SERVER_URL = 'https://22.javascript.pages.academy/keksobooking';
 
-const getData = (url, onSuccess, onError) => {
+function getData(url, onSuccess, onError) {
   return fetch(url)
     .then((response) => {
       if (response.ok) {
-        return response.json()
+        return response.json();
       }
 
       throw new Error(`${response.status}`);
     })
     .then((json) => {
-      onSuccess(json)
+      onSuccess(json);
     })
     .catch((err) => {
       onError(err);
-    })
-};
+    });
+}
 
 const sendData = (onSuccess, onError, url, body) => {
   return fetch(url, {

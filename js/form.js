@@ -34,6 +34,10 @@ const errorPopup = document.querySelector('#error').content;
 const errorPopupContent = errorPopup.querySelector('.error').cloneNode(true);
 const errorButton = errorPopupContent.querySelector('.error__button');
 
+pricePerNight.setAttribute('min', MIN_PRICE[houseType.value]);
+successPopupContent.style.zIndex = 1000;
+errorPopupContent.style.zIndex = 1000;
+
 formTitle.addEventListener('input', () => {
   const titleLength = formTitle.value.length;
   if (titleLength < MIN_TITLE_LENGTH) {
@@ -48,7 +52,7 @@ formTitle.addEventListener('input', () => {
 
 houseType.onchange = () => {
   const price = MIN_PRICE[houseType.value];
-  pricePerNight.placeholder = `от ${price}`;
+  pricePerNight.placeholder = `${price}`;
   pricePerNight.setAttribute('min', price);
 };
 
@@ -95,6 +99,7 @@ const resetForm = () => {
   pricePerNight.value = '';
   pricePerNight.placeholder = `${MIN_PRICE['flat']}`;
   mainPinMarker.setLatLng(CENTER_COORDINATES);
+  successPopupContent.style.zIndex = 1000;
   document.body.append(successPopupContent);
 };
 

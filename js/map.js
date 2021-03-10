@@ -1,16 +1,17 @@
 /* global L:readonly */
-
+/* global _:readonly */
 import { createCard } from './create-card.js';
 import { setActiveState } from './active-state.js';
 import { getData, DATA_URL } from './api.js';
 import { showAlert } from './util.js';
 import { checkHouseType, checkPrice, checkRooms, changeElement, checkGuests, checkFeatures } from './filter.js';
 
-const address = document.querySelector('#address');
 const CENTER_COORDINATES = {
   lat: 35.65500,
   lng: 139.75000,
 };
+const DEBOUNSE_DELAY = 500;
+const address = document.querySelector('#address');
 const layerGroup = L.layerGroup();
 
 const createMarkers = (cards) => {
@@ -67,10 +68,10 @@ const map = L.map('map-canvas')
       DATA_URL,
       (cards) => {
         createMarkers(cards);
-        changeElement(() => {
+        changeElement(_.debounce(() => {
           layerGroup.clearLayers();
           createMarkers(cards);
-        });
+        }, DEBOUNSE_DELAY));
       },
       getError,
     );

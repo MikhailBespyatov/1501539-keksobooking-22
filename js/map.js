@@ -1,5 +1,5 @@
 /* global L:readonly */
-
+/* global _:readonly */
 import { createCard } from './create-card.js';
 import { setActiveState } from './active-state.js';
 import { getData, DATA_URL } from './api.js';

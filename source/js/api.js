@@ -1,7 +1,7 @@
 const DATA_URL = 'https://22.javascript.pages.academy/keksobooking/data';
 const SERVER_URL = 'https://22.javascript.pages.academy/keksobooking';
 
-function getData(url, onSuccess, onError) {
+const getData = (url, onSuccess, onError) => {
   return fetch(url)
     .then((response) => {
       if (response.ok) {

@@ -1,5 +1,6 @@
-/* global L:readonly */
-/* global _:readonly */
+import debounce from 'lodash/debounce';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import { createCard } from './create-card.js';
 import { setActiveState } from './active-state.js';
 import { getData, DATA_URL } from './api.js';
@@ -17,16 +18,11 @@ const layerGroup = L.layerGroup();
 const createMarkers = (cards) => {
   cards
     .slice()
-    .filter((el) => checkHouseType(el))
-    .filter((el) => checkPrice(el))
-    .filter((el) => checkRooms(el))
-    .filter((el) => checkGuests(el))
-    .filter((el) => checkFeatures(el))
+    .filter((el) => checkHouseType(el) && checkPrice(el) && checkRooms(el) && checkGuests(el) && checkFeatures(el))
     .slice(0, 10)
     .forEach((el) => {
       createMarker(el);
     });
-
 };
 
 const getError = () => {
@@ -68,7 +64,7 @@ const map = L.map('map-canvas')
       DATA_URL,
       (cards) => {
         createMarkers(cards);
-        changeElement(_.debounce(() => {
+        changeElement(debounce(() => {
           layerGroup.clearLayers();
           createMarkers(cards);
         }, DEBOUNSE_DELAY));

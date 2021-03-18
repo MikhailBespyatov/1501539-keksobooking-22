@@ -62,7 +62,6 @@ const closePopup = (popup, button) => {
   const popupRemove = () => {
     popup.remove();
     window.removeEventListener('click', popupRemove);
-    console.log('piu');
   };
 
   window.addEventListener('click', popupRemove);

@@ -58,9 +58,15 @@ const showAlert = (message) => {
 };
 
 const closePopup = (popup, button) => {
-  window.addEventListener('click', () => {
+
+  const popupRemove = () => {
     popup.remove();
-  });
+    window.removeEventListener('click', popupRemove);
+    console.log('piu');
+  };
+
+  window.addEventListener('click', popupRemove);
+
 
   window.addEventListener('keydown', (evt) => {
     if (evt.keyCode === 27) {
@@ -75,4 +81,4 @@ const closePopup = (popup, button) => {
   }
 };
 
-export {getRandomNumber, getRandomFractionalNumber, getRandomItem, getRandomArray, shuffle, showAlert, closePopup};
+export { getRandomNumber, getRandomFractionalNumber, getRandomItem, getRandomArray, shuffle, showAlert, closePopup };

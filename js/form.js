@@ -18,6 +18,7 @@ const ROOMS_GUESTS = {
 };
 const ADDRESS_TIME = 0;
 
+const mainContent = document.querySelector('main');
 const formAd = document.querySelector('.ad-form');
 const resetButton = document.querySelector('.ad-form__reset');
 const formTitle = document.querySelector('#title');
@@ -100,7 +101,7 @@ const resetForm = () => {
   pricePerNight.placeholder = `${MIN_PRICE['flat']}`;
   mainPinMarker.setLatLng(CENTER_COORDINATES);
   successPopupContent.style.zIndex = 1000;
-  document.body.append(successPopupContent);
+  mainContent.appendChild(successPopupContent);
 };
 
 resetButton.addEventListener('click', () => {
@@ -110,11 +111,10 @@ resetButton.addEventListener('click', () => {
   }, ADDRESS_TIME);
   pricePerNight.placeholder = `${MIN_PRICE['flat']}`;
   mainPinMarker.setLatLng(CENTER_COORDINATES);
-  document.body.append(successPopupContent);
 });
 
 const getErr = () => {
-  document.body.append(errorPopupContent);
+  mainContent.append(errorPopupContent);
 };
 
 formAd.addEventListener('submit', (evt) => {

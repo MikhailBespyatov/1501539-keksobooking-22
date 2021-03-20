@@ -1,6 +1,5 @@
 import { sendData, SERVER_URL } from './api.js';
 import { CENTER_COORDINATES, address, mainPinMarker } from './map.js';
-import { closePopup } from './util.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -87,6 +86,25 @@ guests.addEventListener('change', () => {
   guests.reportValidity();
 });
 
+const onWindowClickSuccesPopup = () => {
+  successPopupContent.remove();
+  window.removeEventListener('click', onWindowClickSuccesPopup);
+};
+
+const onSuccesPopupEscKeydown = (evt) => {
+  if (evt.keyCode === 27) {
+    evt.preventDefault();
+    successPopupContent.remove();
+    window.removeEventListener('keydown', onSuccesPopupEscKeydown);
+  }
+};
+
+const openSuccesPopup = () => {
+  mainContent.appendChild(successPopupContent);
+  window.addEventListener('click', onWindowClickSuccesPopup);
+  window.addEventListener('keydown', onSuccesPopupEscKeydown);
+};
+
 const resetForm = () => {
   formTitle.value = '';
   houseType.value = 'flat';
@@ -100,8 +118,7 @@ const resetForm = () => {
   pricePerNight.value = '';
   pricePerNight.placeholder = `${MIN_PRICE['flat']}`;
   mainPinMarker.setLatLng(CENTER_COORDINATES);
-  successPopupContent.style.zIndex = 1000;
-  mainContent.appendChild(successPopupContent);
+  openSuccesPopup();
 };
 
 resetButton.addEventListener('click', () => {
@@ -113,14 +130,35 @@ resetButton.addEventListener('click', () => {
   mainPinMarker.setLatLng(CENTER_COORDINATES);
 });
 
-const getErr = () => {
+const onWindowClickErrorPopup = () => {
+  errorPopupContent.remove();
+  window.removeEventListener('click', onWindowClickErrorPopup);
+};
+
+const onErrorPopupEscKeydown = (evt) => {
+  if (evt.keyCode === 27) {
+    errorPopupContent.remove();
+    window.removeEventListener('keydown', onErrorPopupEscKeydown);
+  }
+};
+
+const onErrorButtonClick = () => {
+  errorPopupContent.remove();
+  errorButton.removeEventListener('click', onErrorButtonClick);
+};
+
+const openErrorPopup = () => {
   mainContent.append(errorPopupContent);
+  window.addEventListener('click', onWindowClickErrorPopup);
+  window.addEventListener('keydown', onErrorPopupEscKeydown);
+  errorButton.addEventListener('click', onErrorButtonClick);
+};
+
+const getErr = () => {
+  openErrorPopup();
 };
 
 formAd.addEventListener('submit', (evt) => {
   evt.preventDefault();
   sendData(resetForm, getErr, SERVER_URL, new FormData(evt.target))
 });
-
-closePopup(errorPopupContent, errorButton);
-closePopup(successPopupContent);

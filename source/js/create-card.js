@@ -28,7 +28,7 @@ const renderCardPhoto = ( photos, block) => {
   for (let i = 0; i < photos.length; i++) {
     const cardPhotosItem = document.createElement('img');
     cardPhotosItem.classList.add('popup__photo');
-    cardPhotosItem.src = array[i];
+    cardPhotosItem.src = photos[i];
     cardPhotosItem.alt = 'Фотография жилья';
     cardPhotosItem.width = 45;
     fragment.appendChild(cardPhotosItem);
@@ -50,7 +50,7 @@ const declOfNumRoom = (number, textForms) => {
 }
 
 const declOfNumGuest = (number, textForms) => {
-  number = Math.abs(n) % 100;
+  number = Math.abs(number) % 100;
   const number1 = number % 10;
   if (number1 === 1) {
     return textForms[0];

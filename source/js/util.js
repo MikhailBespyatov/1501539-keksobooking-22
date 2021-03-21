@@ -1,23 +1,23 @@
 const ALERT_SHOW_TIME = 3000;
 
 const showAlert = (message) => {
-  const alertConteiner = document.createElement('div');
-  alertConteiner.style.zIndex = 10;
-  alertConteiner.style.position = 'absolute';
-  alertConteiner.style.left = '20px';
-  alertConteiner.style.top = '20px';
-  alertConteiner.style.right = '20px';
-  alertConteiner.style.padding = 0;
-  alertConteiner.style.fontSize = '30px';
-  alertConteiner.style.textAlign = 'center';
-  alertConteiner.style.backgroundColor = 'green';
-  alertConteiner.style.color = 'white';
-  alertConteiner.textContent = message;
+  const alertContainer = document.createElement('div');
+  alertContainer.style.zIndex = '10';
+  alertContainer.style.position = 'absolute';
+  alertContainer.style.left = '20px';
+  alertContainer.style.top = '20px';
+  alertContainer.style.right = '20px';
+  alertContainer.style.padding = '0';
+  alertContainer.style.fontSize = '30px';
+  alertContainer.style.textAlign = 'center';
+  alertContainer.style.backgroundColor = 'green';
+  alertContainer.style.color = 'white';
+  alertContainer.textContent = message;
 
-  document.body.append(alertConteiner);
+  document.body.append(alertContainer);
 
   setTimeout(() => {
-    alertConteiner.remove();
+    alertContainer.remove();
   }, ALERT_SHOW_TIME);
 };
 

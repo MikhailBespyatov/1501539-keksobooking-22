@@ -82,4 +82,15 @@ const checkFeatures = (object) => {
   });
 };
 
-export { checkHouseType, checkPrice, changeElement, checkRooms, checkGuests, checkFeatures }
+const clearFilter = () => {
+  filterHouseType.value = 'any';
+  filterPrice.value = 'any';
+  filterRooms.value = 'any';
+  filterGuests.value = 'any';
+  filterFeaturesItems.forEach((element) => {
+    element.checked =  false;
+  });
+};
+
+export { checkHouseType, checkPrice, changeElement, checkRooms, checkGuests, checkFeatures,
+  clearFilter }

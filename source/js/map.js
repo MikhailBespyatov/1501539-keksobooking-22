@@ -2,7 +2,7 @@ import debounce from 'lodash/debounce';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { createCard } from './create-card.js';
-import { setActiveState } from './active-state.js';
+import { setActiveForm, setActiveFilter } from './active-state.js';
 import { getData, DATA_URL } from './api.js';
 import { showAlert } from './util.js';
 import { checkHouseType, checkPrice, checkRooms, changeElement, checkGuests, checkFeatures } from './filter.js';
@@ -59,11 +59,12 @@ const createMarker = (array) => {
 
 const map = L.map('map-canvas')
   .on('load', () => {
-    setActiveState();
+    setActiveForm();
     getData(
       DATA_URL,
       (cards) => {
         createMarkers(cards);
+        setActiveFilter();
         changeElement(debounce(() => {
           layerGroup.clearLayers();
           createMarkers(cards);
@@ -115,4 +116,4 @@ address.value =
   `${CENTER_COORDINATES.lat.toFixed(5)}, ${CENTER_COORDINATES.lng.toFixed(5)}`;
 
 
-export { CENTER_COORDINATES, address, getError, mainPinMarker }
+export { CENTER_COORDINATES, address, getError, mainPinMarker, createMarkers }

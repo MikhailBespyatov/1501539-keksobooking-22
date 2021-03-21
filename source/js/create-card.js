@@ -1,4 +1,4 @@
-const HOUSE_TYPE = {
+const HOUSE_TYPES = {
   flat: 'Квартира',
   bungalow: 'Бунгало',
   house: 'Дом',
@@ -8,24 +8,24 @@ const GUEST_TEXT_FORMS = ['гостя', 'гостей'];
 const ROOM_TEXT_FORMS = ['комната', 'комнаты', 'комнат'];
 const cardTemplate = document.querySelector('#card').content;
 
-const renderCardFeatures = (array, block) => {
+const renderCardFeatures = (items, block) => {
   const fragment = document.createDocumentFragment();
   block.innerHTML = '';
 
-  for (let i = 0; i < array.length; i++) {
+  for (let i = 0; i < items.length; i++) {
     const cardFeatureItem = document.createElement('li');
-    cardFeatureItem.classList.add('popup__feature', `popup__feature--${array[i]}`);
+    cardFeatureItem.classList.add('popup__feature', `popup__feature--${items[i]}`);
     fragment.appendChild(cardFeatureItem);
   }
 
   return fragment;
 };
 
-const renderCardPhoto = (array, block) => {
+const renderCardPhoto = ( photos, block) => {
   const fragment = document.createDocumentFragment();
   block.innerHTML = '';
 
-  for (let i = 0; i < array.length; i++) {
+  for (let i = 0; i < photos.length; i++) {
     const cardPhotosItem = document.createElement('img');
     cardPhotosItem.classList.add('popup__photo');
     cardPhotosItem.src = array[i];
@@ -37,22 +37,22 @@ const renderCardPhoto = (array, block) => {
   return fragment;
 };
 
-const declOfNumRoom = (n, textForms) => {
-  n = Math.abs(n) % 100;
-  const n1 = n % 10;
-  if (n1 > 1 && n1 < 5) {
+const declOfNumRoom = (number, textForms) => {
+  number = Math.abs(number) % 100;
+  const number1 = number % 10;
+  if (number1 > 1 && number1 < 5) {
     return textForms[1];
   }
-  if (n1 === 1) {
+  if (number1 === 1) {
     return textForms[0];
   }
   return textForms[2];
 }
 
-const declOfNumGuest = (n, textForms) => {
-  n = Math.abs(n) % 100;
-  const n1 = n % 10;
-  if (n1 === 1) {
+const declOfNumGuest = (number, textForms) => {
+  number = Math.abs(n) % 100;
+  const number1 = number % 10;
+  if (number1 === 1) {
     return textForms[0];
   }
   return textForms[1];
@@ -74,7 +74,7 @@ const createCard = (object) => {
   cardTitle.textContent = object.offer.title;
   cardAddress.textContent = object.offer.address;
   cardPrice.textContent = `${object.offer.price} ₽/ночь`;
-  cardHousingType.textContent = HOUSE_TYPE[object.offer.type];
+  cardHousingType.textContent = HOUSE_TYPES[object.offer.type];
   cardGuestsAndRooms.textContent =
   `${object.offer.rooms} ${declOfNumRoom(object.offer.rooms, ROOM_TEXT_FORMS)} для ${object.offer.guests} ${declOfNumGuest(object.offer.guests, GUEST_TEXT_FORMS)}`;
   cardCheckinCheckout.textContent =
@@ -83,6 +83,14 @@ const createCard = (object) => {
   cardDescription.textContent = object.offer.description;
   cardPhotos.appendChild(renderCardPhoto(object.offer.photos, cardPhotos));
   cardAvatar.src = object.author.avatar;
+
+  if (cardFeatures.children.length === 0) {
+    cardFeatures.remove();
+  }
+
+  if (cardPhotos.children.length === 0) {
+    cardPhotos.remove();
+  }
 
   return cardPopup;
 };

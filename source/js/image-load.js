@@ -16,7 +16,7 @@ avatarChooser.onchange = () => {
     const reader = new FileReader();
 
     reader.addEventListener('load', () => {
-      avatarPreview.src = reader.result;
+      avatarPreview.src = String(reader.result);
     });
 
     reader.readAsDataURL(avatarFile);
@@ -37,7 +37,7 @@ adPhotoChooser.onchange = () => {
     reader.addEventListener('load', () => {
       adPhotoPreview.innerHTML = '';
       const newAdPhoto = document.createElement('img');
-      newAdPhoto.src = reader.result;
+      newAdPhoto.src = String(reader.result);
       newAdPhoto.width = 60;
       newAdPhoto.height = 60;
       newAdPhoto.style.marginLeft = '5px';
@@ -48,3 +48,10 @@ adPhotoChooser.onchange = () => {
     reader.readAsDataURL(adPhotoFile);
   }
 };
+
+const clearPhotoPreview = () => {
+  avatarPreview.src = 'img/muffin-grey.svg';
+  adPhotoPreview.innerHTML = '';
+};
+
+export { clearPhotoPreview }

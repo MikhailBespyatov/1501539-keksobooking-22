@@ -1,5 +1,8 @@
-import { sendData, SERVER_URL } from './api.js';
+import { sendData, SERVER_URL, getData, DATA_URL } from './api.js';
 import { CENTER_COORDINATES, address, mainPinMarker } from './map.js';
+import { clearFilter } from './filter.js';
+import { clearPhotoPreview } from './image-load.js';
+import { createMarkers, getError } from './map.js'
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -28,6 +31,8 @@ const timeOut = document.querySelector('#timeout');
 const rooms = document.querySelector('#room_number');
 const guests = document.querySelector('#capacity');
 const description = document.querySelector('#description');
+const formFeaturesList = document.querySelector('.features');
+const formfeaturesItems = formFeaturesList.querySelectorAll('[name="features"]');
 const successPopup = document.querySelector('#success').content;
 const successPopupContent = successPopup.querySelector('.success').cloneNode(true);
 const errorPopup = document.querySelector('#error').content;
@@ -105,7 +110,7 @@ const openSuccesPopup = () => {
   window.addEventListener('keydown', onSuccesPopupEscKeydown);
 };
 
-const resetForm = () => {
+const clearForm = () => {
   formTitle.value = '';
   houseType.value = 'flat';
   timeIn.value = '12:00';
@@ -117,7 +122,16 @@ const resetForm = () => {
   description.value = '';
   pricePerNight.value = '';
   pricePerNight.placeholder = `${MIN_PRICE['flat']}`;
+  formfeaturesItems.forEach((element) => {
+    element.checked = false;
+  });
   mainPinMarker.setLatLng(CENTER_COORDINATES);
+};
+
+const onFormSubmitClick = () => {
+  clearPhotoPreview();
+  clearForm();
+  clearFilter();
   openSuccesPopup();
 };
 
@@ -128,6 +142,9 @@ resetButton.addEventListener('click', () => {
   }, ADDRESS_TIME);
   pricePerNight.placeholder = `${MIN_PRICE['flat']}`;
   mainPinMarker.setLatLng(CENTER_COORDINATES);
+  clearFilter();
+  clearPhotoPreview();
+  getData( DATA_URL, (cards) => { createMarkers(cards); }, getError );
 });
 
 const onWindowClickErrorPopup = () => {
@@ -160,5 +177,6 @@ const getErr = () => {
 
 formAd.addEventListener('submit', (evt) => {
   evt.preventDefault();
-  sendData(resetForm, getErr, SERVER_URL, new FormData(evt.target))
+  sendData( onFormSubmitClick, getErr, SERVER_URL, new FormData(evt.target));
+  getData( DATA_URL, (cards) => { createMarkers(cards); }, getError );
 });

@@ -12,12 +12,16 @@ formFiltersFieldset.setAttribute('disabled', 'disabled');
 formFiltersSelects.forEach((element) => element.setAttribute('disabled', 'disabled'));
 
 
-const setActiveState = () => {
+const setActiveForm = () => {
   formInfo.classList.remove('ad-form--disabled');
-  formFilters.classList.remove('map__filters--disabled');
   formInfoFieldsets.forEach((element) => element.removeAttribute('disabled'));
+};
+
+const setActiveFilter = () => {
+  formFilters.classList.remove('map__filters--disabled');
   formFiltersFieldset.removeAttribute('disabled');
   formFiltersSelects.forEach((element) => element.removeAttribute('disabled'));
 };
 
-export { setActiveState };
+
+export { setActiveForm, setActiveFilter };

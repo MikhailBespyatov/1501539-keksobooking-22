@@ -19,6 +19,8 @@ const ROOMS_GUESTS = {
   3: [3],
 };
 const ADDRESS_TIME = 0;
+const ERROR_BORDER = '2px solid red';
+const SUCCES_BORDER = '1px solid #d9d9d3';
 
 const mainContent = document.querySelector('main');
 const formAd = document.querySelector('.ad-form');
@@ -38,12 +40,13 @@ const successPopupContent = successPopup.querySelector('.success').cloneNode(tru
 const errorPopup = document.querySelector('#error').content;
 const errorPopupContent = errorPopup.querySelector('.error').cloneNode(true);
 const errorButton = errorPopupContent.querySelector('.error__button');
+const submitButton = document.querySelector('.ad-form__submit');
 
 pricePerNight.setAttribute('min', MIN_PRICE[houseType.value]);
 successPopupContent.style.zIndex = 1000;
 errorPopupContent.style.zIndex = 1000;
 
-formTitle.addEventListener('input', () => {
+const inputTitleHandler = () => {
   const titleLength = formTitle.value.length;
   if (titleLength < MIN_TITLE_LENGTH) {
     formTitle.setCustomValidity(`Еще ${MIN_TITLE_LENGTH - titleLength} симв.`)
@@ -53,25 +56,25 @@ formTitle.addEventListener('input', () => {
     formTitle.setCustomValidity('');
   }
   formTitle.reportValidity();
-});
+};
 
-houseType.onchange = () => {
+const inputHousePriceHandler = () => {
   const price = MIN_PRICE[houseType.value];
   pricePerNight.placeholder = `${price}`;
   pricePerNight.setAttribute('min', price);
 };
 
-timeIn.onchange = () => {
+const inputTimeInHandler = () => {
   timeOut.value = timeIn.value;
 };
 
-timeOut.onchange = () => {
+const inputTimeOutHandler = () => {
   timeIn.value = timeOut.value;
 };
 
 const checkRoomsGuests = () => ROOMS_GUESTS[rooms.selectedIndex].includes(guests.selectedIndex);
 
-rooms.addEventListener('change', () => {
+const inputRoomsHandler = () => {
   const isRoomsGuestsValid = checkRoomsGuests();
   if (!isRoomsGuestsValid) {
     guests.setCustomValidity('Некорректное значение! Проверьте количество гостей.');
@@ -79,9 +82,9 @@ rooms.addEventListener('change', () => {
     guests.setCustomValidity('');
   }
   guests.reportValidity();
-});
+};
 
-guests.addEventListener('change', () => {
+const inputGuestsHandler = () => {
   const isRoomsGuestsValid = checkRoomsGuests();
   if (!isRoomsGuestsValid) {
     guests.setCustomValidity('Некорректное значение! Проверьте количество гостей.');
@@ -89,17 +92,37 @@ guests.addEventListener('change', () => {
     guests.setCustomValidity('');
   }
   guests.reportValidity();
-});
+};
+
+const resetButtonHandler = () => {
+  setTimeout(() => {
+    address.value =
+      `${CENTER_COORDINATES.lat.toFixed(5)}, ${CENTER_COORDINATES.lng.toFixed(5)}`;
+  }, ADDRESS_TIME);
+  pricePerNight.placeholder = `${MIN_PRICE['flat']}`;
+  mainPinMarker.setLatLng(CENTER_COORDINATES);
+  clearFilter();
+  clearPhotoPreview();
+  getData( DATA_URL, (cards) => { createMarkers(cards); }, getError );
+};
+
+const submitFormHandler = (evt) => {
+  evt.preventDefault();
+  sendData( onFormSubmitClick, openErrorPopup, SERVER_URL, new FormData(evt.target));
+  getData( DATA_URL, (cards) => { createMarkers(cards); }, getError );
+};
 
 const onWindowClickSuccesPopup = () => {
   successPopupContent.remove();
   window.removeEventListener('click', onWindowClickSuccesPopup);
+  window.removeEventListener('keydown', onSuccesPopupEscKeydown);
 };
 
 const onSuccesPopupEscKeydown = (evt) => {
   if (evt.keyCode === 27) {
     evt.preventDefault();
     successPopupContent.remove();
+    window.removeEventListener('click', onWindowClickSuccesPopup);
     window.removeEventListener('keydown', onSuccesPopupEscKeydown);
   }
 };
@@ -135,33 +158,27 @@ const onFormSubmitClick = () => {
   openSuccesPopup();
 };
 
-resetButton.addEventListener('click', () => {
-  setTimeout(() => {
-    address.value =
-      `${CENTER_COORDINATES.lat.toFixed(5)}, ${CENTER_COORDINATES.lng.toFixed(5)}`;
-  }, ADDRESS_TIME);
-  pricePerNight.placeholder = `${MIN_PRICE['flat']}`;
-  mainPinMarker.setLatLng(CENTER_COORDINATES);
-  clearFilter();
-  clearPhotoPreview();
-  getData( DATA_URL, (cards) => { createMarkers(cards); }, getError );
-});
-
 const onWindowClickErrorPopup = () => {
   errorPopupContent.remove();
   window.removeEventListener('click', onWindowClickErrorPopup);
+  window.removeEventListener('keydown', onErrorPopupEscKeydown);
+  errorButton.removeEventListener('click', onErrorButtonClick);
 };
 
 const onErrorPopupEscKeydown = (evt) => {
   if (evt.keyCode === 27) {
     errorPopupContent.remove();
+    window.removeEventListener('click', onWindowClickErrorPopup);
     window.removeEventListener('keydown', onErrorPopupEscKeydown);
+    errorButton.removeEventListener('click', onErrorButtonClick);
   }
 };
 
 const onErrorButtonClick = () => {
   errorPopupContent.remove();
   errorButton.removeEventListener('click', onErrorButtonClick);
+  window.removeEventListener('click', onWindowClickErrorPopup);
+  window.removeEventListener('keydown', onErrorPopupEscKeydown);
 };
 
 const openErrorPopup = () => {
@@ -171,12 +188,31 @@ const openErrorPopup = () => {
   errorButton.addEventListener('click', onErrorButtonClick);
 };
 
-const getErr = () => {
-  openErrorPopup();
+const checkValidityTemplate = (element) => {
+  if (element.checkValidity() === false) {
+    element.style.border = ERROR_BORDER;
+    element.addEventListener('change', () => {
+      element.style.border = element.checkValidity() ? SUCCES_BORDER : ERROR_BORDER;
+    });
+  }
 };
 
-formAd.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  sendData( onFormSubmitClick, getErr, SERVER_URL, new FormData(evt.target));
-  getData( DATA_URL, (cards) => { createMarkers(cards); }, getError );
-});
+const checkValidityHandler = () => {
+  checkValidityTemplate(formTitle);
+  checkValidityTemplate(pricePerNight);
+  checkValidityTemplate(guests);
+};
+
+const init = () => {
+  formTitle.addEventListener('input', inputTitleHandler);
+  houseType.addEventListener('change', inputHousePriceHandler);
+  timeIn.addEventListener('change', inputTimeInHandler);
+  timeOut.addEventListener('change', inputTimeOutHandler);
+  rooms.addEventListener('change', inputRoomsHandler);
+  guests.addEventListener('change', inputGuestsHandler);
+  formAd.addEventListener('submit', submitFormHandler);
+  resetButton.addEventListener('click', resetButtonHandler);
+  submitButton.addEventListener('click', checkValidityHandler);
+};
+
+init();

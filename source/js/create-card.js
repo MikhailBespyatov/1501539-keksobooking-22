@@ -12,11 +12,11 @@ const renderCardFeatures = (items, block) => {
   const fragment = document.createDocumentFragment();
   block.innerHTML = '';
 
-  for (let i = 0; i < items.length; i++) {
+  items.forEach((item) => {
     const cardFeatureItem = document.createElement('li');
-    cardFeatureItem.classList.add('popup__feature', `popup__feature--${items[i]}`);
+    cardFeatureItem.classList.add('popup__feature', `popup__feature--${item}`);
     fragment.appendChild(cardFeatureItem);
-  }
+  })
 
   return fragment;
 };
@@ -25,14 +25,14 @@ const renderCardPhoto = ( photos, block) => {
   const fragment = document.createDocumentFragment();
   block.innerHTML = '';
 
-  for (let i = 0; i < photos.length; i++) {
+  photos.forEach((photo) => {
     const cardPhotosItem = document.createElement('img');
     cardPhotosItem.classList.add('popup__photo');
-    cardPhotosItem.src = photos[i];
+    cardPhotosItem.src = photo;
     cardPhotosItem.alt = 'Фотография жилья';
     cardPhotosItem.width = 45;
     fragment.appendChild(cardPhotosItem);
-  }
+  });
 
   return fragment;
 };

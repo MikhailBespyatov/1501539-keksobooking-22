@@ -100,6 +100,7 @@ const resetButtonHandler = () => {
       `${CENTER_COORDINATES.lat.toFixed(5)}, ${CENTER_COORDINATES.lng.toFixed(5)}`;
   }, ADDRESS_TIME);
   pricePerNight.placeholder = `${MIN_PRICE['flat']}`;
+  pricePerNight.setAttribute('min', MIN_PRICE['flat']);
   mainPinMarker.setLatLng(CENTER_COORDINATES);
   clearFilter();
   clearPhotoPreview();
@@ -108,29 +109,29 @@ const resetButtonHandler = () => {
 
 const submitFormHandler = (evt) => {
   evt.preventDefault();
-  sendData( onFormSubmitClick, openErrorPopup, SERVER_URL, new FormData(evt.target));
+  sendData( formSubmitClickHandler, openErrorPopup, SERVER_URL, new FormData(evt.target));
   getData( DATA_URL, (cards) => { createMarkers(cards); }, getError );
 };
 
-const onWindowClickSuccesPopup = () => {
+const windowClickSuccesPopupHandler = () => {
   successPopupContent.remove();
-  window.removeEventListener('click', onWindowClickSuccesPopup);
-  window.removeEventListener('keydown', onSuccesPopupEscKeydown);
+  window.removeEventListener('click', windowClickSuccesPopupHandler);
+  window.removeEventListener('keydown', succesPopupEscKeydownHandler);
 };
 
-const onSuccesPopupEscKeydown = (evt) => {
+const succesPopupEscKeydownHandler = (evt) => {
   if (evt.keyCode === 27) {
     evt.preventDefault();
     successPopupContent.remove();
-    window.removeEventListener('click', onWindowClickSuccesPopup);
-    window.removeEventListener('keydown', onSuccesPopupEscKeydown);
+    window.removeEventListener('click', windowClickSuccesPopupHandler);
+    window.removeEventListener('keydown', succesPopupEscKeydownHandler);
   }
 };
 
 const openSuccesPopup = () => {
   mainContent.appendChild(successPopupContent);
-  window.addEventListener('click', onWindowClickSuccesPopup);
-  window.addEventListener('keydown', onSuccesPopupEscKeydown);
+  window.addEventListener('click', windowClickSuccesPopupHandler);
+  window.addEventListener('keydown', succesPopupEscKeydownHandler);
 };
 
 const clearForm = () => {
@@ -145,47 +146,48 @@ const clearForm = () => {
   description.value = '';
   pricePerNight.value = '';
   pricePerNight.placeholder = `${MIN_PRICE['flat']}`;
+  pricePerNight.setAttribute('min', MIN_PRICE['flat']);
   formfeaturesItems.forEach((element) => {
     element.checked = false;
   });
   mainPinMarker.setLatLng(CENTER_COORDINATES);
 };
 
-const onFormSubmitClick = () => {
+const formSubmitClickHandler = () => {
   clearPhotoPreview();
   clearForm();
   clearFilter();
   openSuccesPopup();
 };
 
-const onWindowClickErrorPopup = () => {
+const windowClickErrorPopupHandler = () => {
   errorPopupContent.remove();
-  window.removeEventListener('click', onWindowClickErrorPopup);
-  window.removeEventListener('keydown', onErrorPopupEscKeydown);
-  errorButton.removeEventListener('click', onErrorButtonClick);
+  window.removeEventListener('click', windowClickErrorPopupHandler);
+  window.removeEventListener('keydown', errorPopupEscKeydownHandler);
+  errorButton.removeEventListener('click', errorButtonClickHandler);
 };
 
-const onErrorPopupEscKeydown = (evt) => {
+const errorPopupEscKeydownHandler = (evt) => {
   if (evt.keyCode === 27) {
     errorPopupContent.remove();
-    window.removeEventListener('click', onWindowClickErrorPopup);
-    window.removeEventListener('keydown', onErrorPopupEscKeydown);
-    errorButton.removeEventListener('click', onErrorButtonClick);
+    window.removeEventListener('click', windowClickErrorPopupHandler);
+    window.removeEventListener('keydown', errorPopupEscKeydownHandler);
+    errorButton.removeEventListener('click', errorButtonClickHandler);
   }
 };
 
-const onErrorButtonClick = () => {
+const errorButtonClickHandler = () => {
   errorPopupContent.remove();
-  errorButton.removeEventListener('click', onErrorButtonClick);
-  window.removeEventListener('click', onWindowClickErrorPopup);
-  window.removeEventListener('keydown', onErrorPopupEscKeydown);
+  errorButton.removeEventListener('click', errorButtonClickHandler);
+  window.removeEventListener('click', windowClickErrorPopupHandler);
+  window.removeEventListener('keydown', errorPopupEscKeydownHandler);
 };
 
 const openErrorPopup = () => {
   mainContent.append(errorPopupContent);
-  window.addEventListener('click', onWindowClickErrorPopup);
-  window.addEventListener('keydown', onErrorPopupEscKeydown);
-  errorButton.addEventListener('click', onErrorButtonClick);
+  window.addEventListener('click', windowClickErrorPopupHandler);
+  window.addEventListener('keydown', errorPopupEscKeydownHandler);
+  errorButton.addEventListener('click', errorButtonClickHandler);
 };
 
 const checkValidityTemplate = (element) => {
